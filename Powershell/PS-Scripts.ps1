@@ -1,6 +1,6 @@
 # Pulled from $PROFILE
 
-function chkfont(){
+function Show-Fonts(){
   # Returns all the fonts installed on the system
   return (New-Object System.Drawing.Text.InstalledFontCollection).Families
 }
