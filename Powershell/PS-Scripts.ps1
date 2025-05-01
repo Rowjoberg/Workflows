@@ -12,19 +12,21 @@ function Test-Script-Help(){
   return Write-Output $tshelp
 }
 
-function Find-Part-Certs ($partnum, $pypath="C:\wc\sytelineapps\src\syteline\find_item_certifications.py", $outputpath="C:\wc\AIRs\$partnum"+"_1"){
+function Find-Part-Certs($partnum, $pypath="C:\wc\sytelineapps\src\syteline\find_item_certifications.py", $AIRNo="_1", $outputpath="C:\Users\rfromberg\AIRs\"+$partnum+$AIRNo){
   if ($null -eq $partnum){
-    return Write-Output "Please provide a Syteline part number"
+    Write-Output "Please provide a Syteline part number"
   } else {
+    mkdir -path $outputpath  
+    Set-Location $outputpath
     # pip install -r "C:\wc\sytelineapps\requirements-test.txt"
-    py "$pypath" -p "$partnum" -o "$outputpath"
-    Set-Location "$outputpath"
-    Invoke-Item "$outputpath"
+    py $pypath -p $partnum -o $outputpath
+    Invoke-Item $outputpath
+    echo $outputpath
     return 
   }    
 }
 
-function AmpTestDevSetup ($partnum, $module){
+function AmpTestDevSetup($partnum, $module){
   if ($null -eq $partnum){
     return Write-Output "Please provide a part number"
   }
