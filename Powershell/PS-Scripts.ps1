@@ -12,14 +12,14 @@ function Test-Script-Help(){
   return Write-Output $tshelp
 }
 
-function Find-Part-Certs($partnum, $pypath="C:\wc\sytelineapps\src\syteline\find_item_certifications.py", $AIRNo="_1", $outputpath="C:\Users\rfromberg\AIRs\"+$partnum+$AIRNo){
+function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\AIRs\"+$partnum+$AIRNo){
   if ($null -eq $partnum){
     Write-Output "Please provide a Syteline part number"
   } else {
     mkdir -path $outputpath  
     Set-Location $outputpath
-    # pip install -r "C:\wc\sytelineapps\requirements-test.txt"
-    py $pypath -p $partnum -o $outputpath
+    C:\wc\find_item_certifications.exe --parts $partnum --outputdir $outputpath
+    C:\wc\part_graph.exe --parts $partnum --outputdir $outputpath
     Invoke-Item $outputpath
     echo $outputpath
     return 
