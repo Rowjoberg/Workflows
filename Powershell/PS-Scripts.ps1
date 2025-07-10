@@ -26,6 +26,20 @@ function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\
   }    
 }
 
+function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List"){
+  if ($null -eq $listfile){
+    Write-Output "Please provide a list of Syteline numbers"
+  } else {
+    mkdir -path $outputpath  
+    Set-Location $outputpath
+    C:\wc\find_item_certifications.exe --file $listfile --outputdir $outputpath
+    C:\wc\part_graph.exe --file $listfile --outputdir $outputpath
+    Invoke-Item $outputpath
+    echo $outputpath
+    return 
+  }    
+}
+
 function AmpTestDevSetup($partnum, $module){
   if ($null -eq $partnum){
     return Write-Output "Please provide a part number"
