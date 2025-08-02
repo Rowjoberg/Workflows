@@ -88,50 +88,51 @@ if __name__ == "__main__":
             [0.01, 0.05, 0.001,],
             [0.01, 0.05, 0.001,],
             ]
+    """
+    print("Matrix:")
+    for row in matrix:
+        print(row)
 
-  #  print("Matrix:")
-  #  for row in matrix:
-  #      print(row)
+    print("\nUpper Tolerances:")
+    for row in upper_tolerance:
+        print(row)
 
-  #  print("\nUpper Tolerances:")
-  #  for row in upper_tolerance:
-  #      print(row)
-
-  #  print("\nLower Tolerances:")
-  #  for row in lower_tolerance:
-  #      print(row)
-
+    print("\nLower Tolerances:")
+    for row in lower_tolerance:
+        print(row)
+    """
     print("\nCalculating total tolerance...")
     results = calculate_total_tolerance(matrix, upper_tolerance, lower_tolerance)
     print_results(results)
-
+    """
     # Show intermediate calculations
-   # print("\nIntermediate calculations:")
-   # matrix_np = np.array(matrix)
-   # upper_np = np.array(upper_tolerance)
-   # lower_np = np.array(lower_tolerance)
+    print("\nIntermediate calculations:")
+    matrix_np = np.array(matrix)
+    upper_np = np.array(upper_tolerance)
+    lower_np = np.array(lower_tolerance)
 
-   # print("Row sums:")
-   # for i, row in enumerate(matrix_np):
-   #     row_sum = np.sum(row)
-   #     upper_sum = np.sum(row + upper_np[i])
-   #     lower_sum = np.sum(row - lower_np[i])
-   #     print(
-   #         f"Row {i + 1}: {row} -> Sum: {row_sum:.6f} (Upper: {upper_sum:.6f}, Lower: {lower_sum:.6f})"
-   #     )
+    print("Row sums:")
+    for i, row in enumerate(matrix_np):
+        row_sum = np.sum(row)
+        upper_sum = np.sum(row + upper_np[i])
+        lower_sum = np.sum(row - lower_np[i])
+        print(
+            f"Row {i + 1}: {row} -> Sum: {row_sum:.6f} (Upper: {upper_sum:.6f}, Lower: {lower_sum:.6f})"
+        )
 
-   # # Calculate the row sums
-   # nominal_row_sums = np.sum(matrix_np, axis=1)
-   # upper_row_sums = np.sum(matrix_np + upper_np, axis=1)
-   # lower_row_sums = np.sum(matrix_np - lower_np, axis=1)
+    # Calculate the row sums
+    nominal_row_sums = np.sum(matrix_np, axis=1)
+    upper_row_sums = np.sum(matrix_np + upper_np, axis=1)
+    lower_row_sums = np.sum(matrix_np - lower_np, axis=1)
 
-   # print(f"\nRow sums array: {nominal_row_sums}")
-   # print(f"Upper row sums: {upper_row_sums}")
-   # print(f"Lower row sums: {lower_row_sums}")
+    print(f"\nRow sums array: {nominal_row_sums}")
+    print(f"Upper row sums: {upper_row_sums}")
+    print(f"Lower row sums: {lower_row_sums}")
 
-   # # Show parallel combination calculation
-   # reciprocal_sum = np.sum(1.0 / nominal_row_sums)
-   # print("\nParallel combination of row sums:")
-   # print(
-   #     f"1/({' + '.join([f'1/{val:.6f}' for val in nominal_row_sums])}) = 1/{reciprocal_sum:.6f} = {results['nominal_total']:.6f}"
-   # )
+    # Show parallel combination calculation
+    reciprocal_sum = np.sum(1.0 / nominal_row_sums)
+    print("\nParallel combination of row sums:")
+    print(
+        f"1/({' + '.join([f'1/{val:.6f}' for val in nominal_row_sums])}) = 1/{reciprocal_sum:.6f} = {results['nominal_total']:.6f}"
+    )
+    """
