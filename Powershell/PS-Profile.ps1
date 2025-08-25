@@ -12,6 +12,9 @@
 # Icons in PS
 Import-Module -Name Terminal-Icons #Install-Module -Name Terminal-Icons -Repository PSGallery
 
+#Excel Functions
+Import-Module -Name ImportExcel
+
 # Set-Theme
 oh-my-posh init pwsh --config "~\Workflows\Themes\Catppuccin_Mocha_2.omp.yaml" | Invoke-Expression # Winget install JanDeDobbeleer.OhMyPosh
  
@@ -23,7 +26,6 @@ Set-PSReadLineKeyHandler -Key Shift+Tab -Function Complete
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 Set-PSReadLineOption -EditMode Windows
-
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"
