@@ -13,10 +13,10 @@
 Import-Module -Name Terminal-Icons #Install-Module -Name Terminal-Icons -Repository PSGallery
 
 #Excel Functions
-Import-Module -Name ImportExcel
+#Import-Module -Name ImportExcel
 
 # Set-Theme
-oh-my-posh init pwsh --config "~\Workflows\Themes\Catppuccin_Mocha_2.omp.yaml" | Invoke-Expression # Winget install JanDeDobbeleer.OhMyPosh
+oh-my-posh init pwsh --config "~\Workflows\Themes\OhMyPoshCatppuccin_Mocha_2.omp.yaml" | Invoke-Expression # Winget install JanDeDobbeleer.OhMyPosh
  
 # z commands to jump to directories
 # Invoke-Expression (& { (zoxide init powershell | Out-String) }) #winget install ajeetdsouza.zoxide
@@ -26,6 +26,9 @@ Set-PSReadLineKeyHandler -Key Shift+Tab -Function Complete
 Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 Set-PSReadLineOption -EditMode Windows
+# UV Auto-completions
+(& uv generate-shell-completion powershell) | Out-String | Invoke-Expression
+
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 if (Test-Path($ChocolateyProfile)) {
   Import-Module "$ChocolateyProfile"

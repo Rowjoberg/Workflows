@@ -21,7 +21,7 @@ function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\
     C:\wc\find_item_certifications.exe --parts $partnum --outputdir $outputpath
     C:\wc\part_graph.exe --parts $partnum --outputdir $outputpath
     Invoke-Item $outputpath
-    echo $outputpath
+    Write-Output $outputpath
     return 
   }    
 }
@@ -35,7 +35,7 @@ function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List"){
     C:\wc\find_item_certifications.exe --file $listfile --outputdir $outputpath
     C:\wc\part_graph.exe --file $listfile --outputdir $outputpath
     Invoke-Item $outputpath
-    echo $outputpath
+    Write-Output $outputpath
     return 
   }    
 }

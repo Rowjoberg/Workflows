@@ -1,2 +1,4 @@
 *.bak
 .venv/
+Python/__pycache__
+Python/.python-version
