@@ -70,3 +70,22 @@ function BOMCompare ($bom1, $bom2){
   python "C:\wc\BOM Compare\BOMCompare.py" $bom1 $bom2
     
 }
+
+function CertSearch{
+  param(
+    [string]$Certifications,
+    [string]$SearchPath="C:\CSM\CSM\Certifications\",
+    [string]$OutputPath="~\AIRs\CertSearch.csv"
+  )<#
+Usage:
+  CertSearch <String: Certificate Number> <Search Path> <Output Path> 
+
+Searches a Path (default="C:\CSM\CSM\Certifications\") for a certification (Filtered by wildcards either side of string), then exports all file paths to a CSV (default="~\AIRs\CertSearch.csv")
+#>
+  if ($null -eq $Certifications){
+    return Write-Output "Please provide a Certification to  search"
+  }
+  $OutputFiles=(Get-ChildItem -Path $SearchPath -Recurse -Filter *$Certifications* -File | ForEach-Object { $_.FullName })
+  $OutputDir=(Get-ChildItem -Path $SearchPath -Recurse -Filter *$Certifications* -Directory | ForEach-Object { $_.FullName })
+  return ($OutputFiles > $OutputPath), (Write-Output $OutputDir), (Write-Output "File Locations Written to "$OutputPath), (Invoke-Item $OutputPath)
+}
