@@ -1,10 +1,10 @@
 # Pulled from $PROFILE
 
-function Show-Fonts(){
+function Show-Fonts() {
   # Returns all the fonts installed on the system
   return (New-Object System.Drawing.Text.InstalledFontCollection).Families
 }
-function Test-Script-Help(){
+function Test-Script-Help() {
   $tshelp = "When updating the config files, run the following commands:
         progdatabase . # in an updated http://subversion/svn/csm/tools/AmpTest/config
         progression --database .\prog_config.zip # To test the database
@@ -12,8 +12,8 @@ function Test-Script-Help(){
   return Write-Output $tshelp
 }
 
-function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\AIRs\"+$partnum+$AIRNo){
-  if ($null -eq $partnum){
+function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\AIRs\"+$partnum+$AIRNo) {
+  if ($null -eq $partnum) {
     Write-Output "Please provide a Syteline part number"
   } else {
     mkdir -path $outputpath  
@@ -26,8 +26,8 @@ function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\
   }    
 }
 
-function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List"){
-  if ($null -eq $listfile){
+function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List") {
+  if ($null -eq $listfile) {
     Write-Output "Please provide a list of Syteline numbers"
   } else {
     mkdir -path $outputpath  
@@ -40,11 +40,11 @@ function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List"){
   }    
 }
 
-function AmpTestDevSetup($partnum, $module){
-  if ($null -eq $partnum){
+function AmpTestDevSetup($partnum, $module) {
+  if ($null -eq $partnum) {
     return Write-Output "Please provide a part number"
   }
-  if ($null -eq $module){
+  if ($null -eq $module) {
     return Write-Output "Please provide a module e.g. board, final, etc."
   }
   atdev debug "$partnum-$module"
@@ -55,15 +55,15 @@ function AmpTestDevSetup($partnum, $module){
   }
 }
 
-function Show-Path-Env(){
+function Show-Path-Env() {
   return $env:Path -replace ';', "`n"
 }
 
-function BOMCompare ($bom1, $bom2){
-  if ($null -eq $bom1){
+function BOMCompare ($bom1, $bom2) {
+  if ($null -eq $bom1) {
     return Write-Output "Please provide a path to the first BOM"
   }
-  if ($null -eq $bom2){
+  if ($null -eq $bom2) {
     return Write-Output "Please provide a path to the second BOM"
   }
   # python -m pip install -r "C:\wc\BOM Compare\requirements.txt"
@@ -71,7 +71,7 @@ function BOMCompare ($bom1, $bom2){
     
 }
 
-function CertSearch{
+function CertSearch {
   param(
     [string]$Certifications,
     [string]$SearchPath="C:\CSM\CSM\Certifications\",
@@ -82,10 +82,52 @@ Usage:
 
 Searches a Path (default="C:\CSM\CSM\Certifications\") for a certification (Filtered by wildcards either side of string), then exports all file paths to a CSV (default="~\AIRs\CertSearch.csv")
 #>
-  if ($null -eq $Certifications){
+  if ($null -eq $Certifications) {
     return Write-Output "Please provide a Certification to  search"
   }
   $OutputFiles=(Get-ChildItem -Path $SearchPath -Recurse -Filter *$Certifications* -File | ForEach-Object { $_.FullName })
   $OutputDir=(Get-ChildItem -Path $SearchPath -Recurse -Filter *$Certifications* -Directory | ForEach-Object { $_.FullName })
   return ($OutputFiles > $OutputPath), (Write-Output $OutputDir), (Write-Output "File Locations Written to "$OutputPath), (Invoke-Item $OutputPath)
 }
+
+function ListSearch {
+  [CmdletBinding()] # Enables advanced function features, including -Verbose
+  param( 
+    [string]$SearchListPath = "C:\Users\rfromberg\Downloads\Dieselguard Repair Info.txt", # Define the path to the text file containing search terms
+    [string]$SearchDirectory = "G:\Quality\Quality Assurance\Repair, Overhaul, RBR Reports", # Define the directory to search in
+    [string]$ExportPath = "C:\Users\rfromberg\Downloads\Dieselguard Repair Paths.txt" # Define the path to a file to write to
+  )
+  
+  # Check if the search list file exists
+  if (-Not (Test-Path -Path $SearchListPath)) {
+    Write-Verbose "Error: Search list file not found at $SearchListPath" 
+    exit
+  }
+
+  # Read the search terms from the text file
+  $SearchTerms = Get-Content -Path $SearchListPath
+
+  # Check if the search terms are not empty
+  if (-Not $SearchTerms) {
+    Write-Verbose "Error: No search terms found in the file." 
+    exit
+  }
+
+  # Loop through each search term and search for matching files or directories
+  foreach ($Term in $SearchTerms) {
+    Write-Verbose "Searching for: $Term" 
+    # Search for files and directories matching the term
+    $Results = Get-ChildItem -Path $SearchDirectory -Recurse -Filter *$Term* -File -ErrorAction SilentlyContinue
+
+    if ($Results) {
+      Write-Verbose "Found the following matches for '$Term':" 
+      $Results | ForEach-Object { Write-Verbose $_.FullName }
+      $List += "$Results`n"
+    } else {
+      Write-Verbose "No matches found for '$Term'." 
+    }
+  }
+  ($List > $ExportPath)
+  Write-Host "Search Complete, writing results to:`n$ExportPath"
+}
+
