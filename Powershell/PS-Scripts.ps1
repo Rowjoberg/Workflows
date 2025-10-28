@@ -18,8 +18,8 @@ function Find-Part-Certs($partnum, $AIRNo="_1", $outputpath="C:\Users\rfromberg\
   } else {
     mkdir -path $outputpath  
     Set-Location $outputpath
-    C:\wc\find_item_certifications.exe --parts $partnum --outputdir $outputpath
-    C:\wc\part_graph.exe --parts $partnum --outputdir $outputpath
+    C:\dev\find_item_certifications.exe --parts $partnum --outputdir $outputpath
+    C:\dev\part_graph.exe --parts $partnum --outputdir $outputpath
     Invoke-Item $outputpath
     Write-Output $outputpath
     return 
@@ -32,8 +32,8 @@ function Find-Part-List($listfile, $outputpath="C:\Users\rfromberg\AIRs\List") {
   } else {
     mkdir -path $outputpath  
     Set-Location $outputpath
-    C:\wc\find_item_certifications.exe --file $listfile --outputdir $outputpath
-    C:\wc\part_graph.exe --file $listfile --outputdir $outputpath
+    C:\dev\find_item_certifications.exe --file $listfile --outputdir $outputpath
+    C:\dev\part_graph.exe --file $listfile --outputdir $outputpath
     Invoke-Item $outputpath
     Write-Output $outputpath
     return 
@@ -66,8 +66,8 @@ function BOMCompare ($bom1, $bom2) {
   if ($null -eq $bom2) {
     return Write-Output "Please provide a path to the second BOM"
   }
-  # python -m pip install -r "C:\wc\BOM Compare\requirements.txt"
-  python "C:\wc\BOM Compare\BOMCompare.py" $bom1 $bom2
+  # python -m pip install -r "C:\dev\BOM Compare\requirements.txt"
+  python "C:\dev\BOM Compare\BOMCompare.py" $bom1 $bom2
     
 }
 
@@ -93,9 +93,9 @@ Searches a Path (default="C:\CSM\CSM\Certifications\") for a certification (Filt
 function ListSearch {
   [CmdletBinding()] # Enables advanced function features, including -Verbose
   param( 
-    [string]$SearchListPath = "C:\Users\rfromberg\Downloads\Dieselguard Repair Info.txt", # Define the path to the text file containing search terms
-    [string]$SearchDirectory = "G:\Quality\Quality Assurance\Repair, Overhaul, RBR Reports", # Define the directory to search in
-    [string]$ExportPath = "C:\Users\rfromberg\Downloads\Dieselguard Repair Paths.txt" # Define the path to a file to write to
+    [string]$SearchListPath, # Define the path to the text file containing search terms
+    [string]$ExportPath, # Define the path to a file to write to
+    [string]$SearchDirectory = "G:\Quality\Quality Assurance\Repair, Overhaul, RBR Reports" # Define the directory to search in
   )
   
   # Check if the search list file exists
