@@ -10,7 +10,7 @@ function y {
     }
     Remove-Item -Path $tmp
 }
-
+Set-Alias -Name lg -Value lazygit.exe -Description "Lazygit alias for pure gitty greatness"
 function Show-Fonts() {
   # Returns all the fonts installed on the system
   return (New-Object System.Drawing.Text.InstalledFontCollection).Families
