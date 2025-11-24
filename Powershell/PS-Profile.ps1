@@ -14,7 +14,7 @@ Import-Module -Name Terminal-Icons
 #Import-Module -Name ImportExcel
 
 # Set-Theme
-oh-my-posh init pwsh --config "~\Workflows\Themes\OhMyPoshCatppuccin_Mocha_2.omp.yaml" | Invoke-Expression 
+oh-my-posh init pwsh --config "~\Workflows\Themes\OhMyPoshCatppuccin_Mocha.omp.yaml" | Invoke-Expression 
 # Winget install JanDeDobbeleer.OhMyPosh
  
 # z commands to jump to directories
