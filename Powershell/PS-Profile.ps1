@@ -4,22 +4,22 @@
 # Scripts in here
 #. "~\Workflows\Powershell\PS-Scripts.ps1"
 # Variable in here
-#. "~\Workflows\Powershell\PS-Scripts.ps1"
-# Variable in here
-#. "\Workflows\Powershell\PS-Variables.ps1"
+#. "~\Workflows\Powershell\PS-Variables.ps1"
 
-# Import-Module posh-git # Redundant with Oh-My-Posh
 # Icons in PS
-Import-Module -Name Terminal-Icons #Install-Module -Name Terminal-Icons -Repository PSGallery
+Import-Module -Name Terminal-Icons 
+#Install-Module -Name Terminal-Icons -Repository PSGallery
 
 #Excel Functions
 #Import-Module -Name ImportExcel
 
 # Set-Theme
-oh-my-posh init pwsh --config "~\Workflows\Themes\OhMyPoshCatppuccin_Mocha_2.omp.yaml" | Invoke-Expression # Winget install JanDeDobbeleer.OhMyPosh
+oh-my-posh init pwsh --config "~\Workflows\Themes\OhMyPoshCatppuccin_Mocha_2.omp.yaml" | Invoke-Expression 
+# Winget install JanDeDobbeleer.OhMyPosh
  
 # z commands to jump to directories
-# Invoke-Expression (& { (zoxide init powershell | Out-String) }) #winget install ajeetdsouza.zoxide
+Invoke-Expression (& { (zoxide init powershell | Out-String) }) 
+#winget install ajeetdsouza.zoxide
 
 Import-Module PSReadLine # Install-Module PSReadLine
 Set-PSReadLineKeyHandler -Key Shift+Tab -Function Complete
