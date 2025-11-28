@@ -1,0 +1,203 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "blocks": [
+    {
+      "newline": true,
+      "alignment": "left",
+      "leading_diamond": "<#6c7086>\u250f</>",
+      "segments": [
+        {
+          "type": "session",
+          "foreground": "#89b4fa",
+          "style": "diamond",
+          "template": "<#7f849c>(</><#cdd6f4>\ueb99</> {{.UserName}} @ <#cdd6f4>\uf108</> {{.HostName}}<#7f849c>)</>"
+        },
+        {
+          "type": "sysinfo",
+          "style": "diamond",
+          "foreground": "#89b4fa",
+          "template": "<#7f849c>(</><#cdd6f4>\ue266</> {{ round .PhysicalPercentUsed .Precision }}% {{ (div ((sub .PhysicalTotalMemory .PhysicalAvailableMemory)|float64) 1073741824.0) }}/{{ (div .PhysicalTotalMemory 1073741824.0) }}GB<#7f849c>)</>"
+        },
+        {
+          "type": "command",
+          "foreground": "#89b4fa",
+          "style": "diamond",
+          "properties": {
+            "command": "df -h / | awk 'NR==2{print $5}'",
+            "shell": "bash",
+            "display_error": false
+          },
+          "template": "<#7f849c>(</><#cdd6f4>\udb80\udeca</> {{ .Output }}<#7f849c>)</>"
+        },
+        {
+          "foreground": "#f36943",
+          "foreground_templates": [
+            "{{if eq \"Charging\" .State.String}}#40c4ff{{end}}",
+            "{{if eq \"Discharging\" .State.String}}#ff5722{{end}}",
+            "{{if eq \"Full\" .State.String}}#4caf50{{end}}"
+          ],
+          "properties": {
+            "charged_icon": "<#cdd6f4>\ue22f</> ",
+            "charging_icon": "\ueb2d ",
+            "discharging_icon": "<#ffff00>\uf244</> "
+          },
+          "style": "diamond",
+          "template": "({{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}{{ .Error }}\uf295)",
+          "type": "battery"
+        }
+      ],
+      "type": "prompt"
+    },
+
+    {
+      "newline": true,
+      "alignment": "left",
+      "leading_diamond": "<#cba6f7>\u2523</>",
+      "segments": [
+        {
+          "type": "az",
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "(<#cdd6f4>\uebd8</> Subscription: <#ffff00>{{ .Name }}</>)"
+        },
+        {
+          "type": "azd",
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "(<#cdd6f4>\uebd8</> Azure Developer CLI Environment: <#ffff00>{{ .DefaultEnvironment  }}</> :: <#ffff00>{{ .Version }}</>)"
+        },
+        {
+          "type": "aws",
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "(<#cdd6f4>\uf270</> <#ffff00>{{ .Profile }}</>{{if .Region}}@<#ffff00>{{ .Region }}</>{{ end }})"
+        },
+        {
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "({{ if .Error }}{{ .Error }}{{ else }}<#cdd6f4>\uf1a0</> <#ffff00>{{ .Project }}</> :: <#ffff00>{{.Account}}</>{{ end }})",
+          "type": "gcp"
+        },
+        {
+          "type": "kubectl",
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "(<#cdd6f4>\udb84\udcfe</> <#ffff00>{{.Context}}</>{{if .Namespace}} :: <#ffff00>{{.Namespace}}</>{{end}})"
+        },
+        {
+          "type": "project",
+          "foreground": "#cba6f7",
+          "style": "diamond",
+          "template": "({{ if .Error }}{{ .Error }}{{ else }}{{ if .Name }}<#cdd6f4>\uf487</> {{ .Name }}{{ end }}{{ if .Target }} {{ .Target }}{{ end }}{{ end }})"
+        }
+      ],
+      "type": "prompt"
+    },
+
+    {
+      "type": "prompt",
+      "alignment": "right",
+      "segments": [
+        {
+          "type": "node",
+          "style": "plain",
+          "foreground": "#a6e3a1",
+          "template": "<#9399b2>\udb83\udfdf\udb83\udfdf</> <#9399b2>via</> <#43853d>\ue718</> {{ .Full }}"
+        },
+        {
+          "type": "npm",
+          "style": "plain",
+          "foreground": "#a6e3a1",
+          "template": " <#9399b2>&&</> <#CB3837>\ue71e</> <#CB3837>{{ .Full }}</>"
+        }
+      ]
+    },
+
+    {
+      "type": "prompt",
+      "newline": true,
+      "alignment": "left",
+      "leading_diamond": "<#6c7086>\u2523</>",
+      "segments": [
+        {
+          "type": "path",
+          "style": "diamond",
+          "foreground": "#b4befe",
+          "properties": {
+            "style": "full"
+          },
+          "template": "<#7f849c>(</><#cdd6f4>\uf115</> {{ .Path }}<#7f849c>)</>"
+        },
+        {
+          "type": "git",
+          "style": "plain",
+          "foreground": "#f5e0dc",
+          "properties": {
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          },
+          "template": "<#7f849c>(</><#ffffff>{{ .UpstreamIcon }} </>{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} <#ffffff>\uf044</> {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} <#ffffff>\uf046</> {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} <#ffffff>\ueb4b</> {{ .StashCount }}{{ end }}<#7f849c>)</>"
+        }
+      ]
+    },
+
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "newline": true,
+      "leading_diamond": "<#cba6f7>\u2514\u2500</>",
+      "segments": [
+        {
+          "type": "root",
+          "style": "diamond",
+          "template": "<#ffff00>( \udb81\ude45 )</> "
+        },
+        {
+          "type": "text",
+          "style": "diamond",
+          "foreground": "#cba6f7",
+          "template": "\uf138 "
+        }
+      ]
+    },
+
+    {
+      "type": "rprompt",
+      "segments": [
+        {
+          "type": "status",
+          "style": "diamond",
+          "foreground": "#f38ba8",
+          "template": "\uf071 Check Your Command "
+        },
+        {
+          "type": "executiontime",
+          "style": "plain",
+          "foreground": "#74c7ec",
+          "properties": { "style": "dallas", "always_enabled": true },
+          "template": "<#7f849c>(</><#cdd6f4>\udb81\udd1a</> {{ .FormattedMs }}s<#7f849c>)</>"
+        }
+      ]
+    }
+  ],
+  "secondary_prompt": {
+    "background": "transparent",
+    "template": " "
+  },
+  "valid_line": {
+    "background": "transparent",
+    "template": "> "
+  },
+  "error_line": {
+    "background": "transparent",
+    "template": "<#f38ba8>\uea87</> "
+  },
+  "transient_prompt": {
+    "newline": true,
+    "background": "transparent",
+    "foreground": "#cba6f7",
+    "template": " \uf138 "
+  },
+  "final_space": false,
+  "version": 3
+}
