@@ -2,13 +2,13 @@
 #
 # yazi Shell Function
 function y {
-    $tmp = (New-TemporaryFile).FullName
-    yazi $args --cwd-file="$tmp"
-    $cwd = Get-Content -Path $tmp -Encoding UTF8
-    if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
-        Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
-    }
-    Remove-Item -Path $tmp
+  $tmp = (New-TemporaryFile).FullName
+  yazi $args --cwd-file="$tmp"
+  $cwd = Get-Content -Path $tmp -Encoding UTF8
+  if (-not [String]::IsNullOrEmpty($cwd) -and $cwd -ne $PWD.Path) {
+    Set-Location -LiteralPath (Resolve-Path -LiteralPath $cwd).Path
+  }
+  Remove-Item -Path $tmp
 }
 Set-Alias -Name lg -Value lazygit.exe -Description "Lazygit alias for pure gitty greatness"
 function Show-Fonts() {
@@ -142,3 +142,107 @@ function ListSearch {
   Write-Host "Search Complete, writing results to:`n$ExportPath"
 }
 
+function Copy-ObjectsFromFile {
+  <#
+    .SYNOPSIS
+        Copies files or folders listed in a text file to a destination directory.
+
+    .DESCRIPTION
+        Reads a text file containing paths (one per line) and copies each existing file or folder
+        to the specified destination. Supports verbose output for detailed progress.
+
+    .PARAMETER PathsFile
+        The full path to the text file containing source paths (one per line).
+
+    .PARAMETER Destination
+        The destination directory where the files/folders will be copied.
+
+    .PARAMETER VerboseOutput
+        Switch to enable verbose printing of copy operations.
+
+    .EXAMPLE
+        Copy-ObjectsFromFile -PathsFile "C:\paths.txt" -Destination "C:\backup" -VerboseOutput
+    #>
+
+  param (
+    [Parameter(Mandatory = $true)]
+    [string]$PathsFile,
+
+    [Parameter(Mandatory = $true)]
+    [string]$Destination,
+
+    [switch]$VerboseOutput
+  )
+
+  # Validate input file
+  if (-not (Test-Path $PathsFile)) {
+    Write-Error "Paths file not found: $PathsFile"
+    return
+  }
+
+  # Validate destination
+  if (-not (Test-Path $Destination)) {
+    Write-Host "Destination does not exist. Creating: $Destination"
+    New-Item -ItemType Directory -Path $Destination -Force | Out-Null
+  }
+
+  # Read paths and process
+  $paths = Get-Content -Path $PathsFile
+  foreach ($path in $paths) {
+    if (Test-Path $path) {
+      Copy-Item -Path $path -Destination $Destination -Force
+      if ($VerboseOutput) {
+        Write-Host "Copied: $path"
+      }
+    } else {
+      Write-Warning "Path not found: $path"
+    }
+  }
+}
+
+function Remove-ExactFilename {
+  <#
+    .SYNOPSIS
+    Removes all files that match the exact filename within the specified directory and its subdirectories.
+
+    .DESCRIPTION
+    This function takes a filename as input and recursively searches through the current directory and all child directories.
+    If any file matches the exact filename, it will be deleted. Console logging is included to show progress and results.
+
+    .PARAMETER Filename
+    The exact name of the file to remove (including extension).
+
+    .EXAMPLE
+    Remove-ExactFilename -Filename "example.txt"
+    # Removes all files named 'example.txt' in the current directory and subdirectories.
+    #>
+
+  [CmdletBinding()]
+  param (
+    [Parameter(Mandatory = $true)]
+    [string]$Filename
+  )
+
+  Write-Host "Starting search for files named '$Filename'..." -ForegroundColor Cyan
+
+  # Get all matching files recursively
+  $files = Get-ChildItem -Path . -Recurse -File | Where-Object { $_.Name -eq $Filename }
+
+  if ($files.Count -eq 0) {
+    Write-Host "No files found matching '$Filename'." -ForegroundColor Yellow
+    return
+  }
+
+  Write-Host "Found $($files.Count) file(s) matching '$Filename'." -ForegroundColor Green
+
+  foreach ($file in $files) {
+    try {
+      Remove-Item -Path $file.FullName -Force
+      Write-Host "Removed: $($file.FullName)" -ForegroundColor Magenta
+    } catch {
+      Write-Host "Failed to remove: $($file.FullName). Error: $($_.Exception.Message)" -ForegroundColor Red
+    }
+  }
+
+  Write-Host "Operation completed." -ForegroundColor Cyan
+}
