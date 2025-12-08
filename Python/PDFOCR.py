@@ -162,7 +162,14 @@ def parse_pdf_paths_from_txt(txt_path):
 
 
 def process_path(
-    path_arg, export_txt, csv_writer, match_strings, verbose, summary, match_case
+    path_arg,
+    export_txt,
+    csv_writer,
+    match_strings,
+    verbose,
+    summary,
+    match_case,
+    limit=None,
 ):
     path_obj = Path(path_arg)
     if path_obj.is_dir():
@@ -177,6 +184,12 @@ def process_path(
                 summary,
                 match_case,
             )
+            # Stop if we hit the limit
+            if limit is not None and summary["matches"] >= limit:
+                if verbose:
+                    print(f"Match limit ({limit}) reached. Stopping.")
+                break
+
     elif path_obj.is_file():
         if path_obj.suffix.lower() == ".pdf":
             process_pdf(
@@ -202,6 +215,11 @@ def process_path(
                     summary,
                     match_case,
                 )
+                # Stop if we hit the limit
+                if limit is not None and summary["matches"] >= limit:
+                    if verbose:
+                        print(f"Match limit ({limit}) reached. Stopping.")
+                    break
         else:
             print(
                 f"Invalid file type: {path_obj}. Must be a PDF, TXT, or directory containing PDFs."
@@ -240,6 +258,12 @@ def main():
     )
     parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
 
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Stop processing after this many files are found to have matches",
+    )
+
     args = parser.parse_args()
 
     match_strings = load_match_strings(args.match)
@@ -267,8 +291,16 @@ def main():
         )
 
     summary = {"processed": 0, "matches": 0, "errors": 0}
+
     process_path(
-        args.path, args.export_txt, csv_writer, match_strings, args.verbose, summary, match_case
+        args.path,
+        args.export_txt,
+        csv_writer,
+        match_strings,
+        args.verbose,
+        summary,
+        match_case,
+        limit=args.limit,
     )
 
     if csv_file:
