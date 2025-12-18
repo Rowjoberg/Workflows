@@ -11,13 +11,14 @@ sudo pacman -S --needed \
   zoxide \
   fzf \
   fd \
-  curl
-
-#===Curl===#
-curl -s https://ohmyposh.dev/install.sh | bash -s
+  curl \
+  qBittorrent
 
 #===Reload Bash===#
 bash
+
+#===Curl===#
+curl -s https://ohmyposh.dev/install.sh | bash -s
 
 #===Binaries===#
 oh-my-posh font install FiraCode
