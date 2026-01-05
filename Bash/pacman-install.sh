@@ -20,6 +20,9 @@ bash
 #===Curl===#
 curl -s https://ohmyposh.dev/install.sh | bash -s
 
+#===Yay===#
+sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si
+
 #===Binaries===#
 oh-my-posh font install FiraCode
 
