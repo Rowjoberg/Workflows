@@ -6,6 +6,28 @@ from pathlib import Path
 import pytesseract
 from pdf2image import convert_from_path
 
+
+def get_unique_path(base_path: Path) -> Path:
+    """
+    If base_path exists, append an increment before the suffix:
+      name.csv -> name_1.csv, name_2.csv, ...
+      name.txt -> name_1.txt, name_2.txt, ...
+    """
+    if not base_path.exists():
+        return base_path
+
+    stem = base_path.stem
+    suffix = base_path.suffix
+    parent = base_path.parent
+
+    counter = 1
+    while True:
+        candidate = parent / f"{stem}_{counter}{suffix}"
+        if not candidate.exists():
+            return candidate
+        counter += 1
+
+
 # Configure tesseract path if needed
 pytesseract.pytesseract.tesseract_cmd = (
     r"C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
@@ -16,7 +38,7 @@ def pdf_to_text(pdf_path):
     """Convert a PDF to text using OCR."""
     text = ""
     try:
-        images = convert_from_path(str(pdf_path))
+        images = convert_from_path(str(pdf_path), fmt="jpeg")
         for img in images:
             text += pytesseract.image_to_string(img)
     except Exception as e:
@@ -124,11 +146,17 @@ def process_pdf(
         if export_txt:
             export_txt_path = Path(export_txt)
             export_txt_path.mkdir(parents=True, exist_ok=True)
+
+            # Initial path
             txt_path = export_txt_path / f"{pdf_path.stem}.txt"
+            # Get a unique path if it already exists
+            txt_path = get_unique_path(txt_path)
+
             with txt_path.open("w", encoding="utf-8") as f:
                 f.write(text)
             if verbose:
                 print(f"Saved OCR text to {txt_path}")
+
 
         if csv_writer:
             hyperlink = f'=HYPERLINK("{pdf_path}")'
@@ -269,13 +297,22 @@ def main():
     match_strings = load_match_strings(args.match)
     match_case = args.match_case
 
+
     csv_writer = None
     csv_file = None
     if args.export_csv:
         export_csv_path = Path(args.export_csv)
-        if export_csv_path.is_dir():
+
+        # If user provided a directory, default file name inside it
+        if export_csv_path.is_dir() or export_csv_path.suffix.lower() != ".csv":
             export_csv_path = export_csv_path / "summary.csv"
+
+        # Ensure directory exists
         export_csv_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Use unique file name if it already exists
+        export_csv_path = get_unique_path(export_csv_path)
+
         csv_file = export_csv_path.open("w", newline="", encoding="utf-8")
         csv_writer = csv.writer(csv_file)
         csv_writer.writerow(

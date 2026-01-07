@@ -14,7 +14,6 @@ Import-Module -Name Terminal-Icons
 #===PSWH Predictive lines===#
 # Ensure PSReadLine module is loaded
 # Install-Module -Name CompletionPredictor
-# Install-Module -Name PSCompletions
 if (-not (Get-Module -ListAvailable -Name PSReadLine)) {
   Install-PSResource -Name PSReadLine
   Write-Error "PSReadLine module is not installed. Installing it with: Install-PSResource -Name PSReadLine"
@@ -31,7 +30,6 @@ Set-PSReadLineKeyHandler -Chord Shift+Tab -Function AcceptSuggestion
 Set-PSReadLineKeyHandler -Chord Ctrl+RightArrow -Function AcceptNextSuggestionWord
 Set-PSReadLineOption -PredictionViewStyle ListView
 Set-PSReadLineOption -EditMode Windows
-Import-Module PSCompletions
 
 #===Excel Functions===#
 #Import-Module -Name ImportExcel

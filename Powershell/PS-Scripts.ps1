@@ -142,6 +142,7 @@ function ListSearch {
   Write-Host "Search Complete, writing results to:`n$ExportPath"
 }
 
+
 function Copy-ObjectsFromFile {
   <#
     .SYNOPSIS
@@ -160,9 +161,12 @@ function Copy-ObjectsFromFile {
     .PARAMETER VerboseOutput
         Switch to enable verbose printing of copy operations.
 
+    .PARAMETER Limit
+        Optional. Maximum number of items to copy from the list.
+
     .EXAMPLE
-        Copy-ObjectsFromFile -PathsFile "C:\paths.txt" -Destination "C:\backup" -VerboseOutput
-    #>
+        Copy-ObjectsFromFile -PathsFile "C:\paths.txt" -Destination "C:\backup" -VerboseOutput -Limit 10
+  #>
 
   param (
     [Parameter(Mandatory = $true)]
@@ -171,7 +175,9 @@ function Copy-ObjectsFromFile {
     [Parameter(Mandatory = $true)]
     [string]$Destination,
 
-    [switch]$VerboseOutput
+    [switch]$VerboseOutput,
+
+    [int]$Limit
   )
 
   # Validate input file
@@ -186,8 +192,18 @@ function Copy-ObjectsFromFile {
     New-Item -ItemType Directory -Path $Destination -Force | Out-Null
   }
 
-  # Read paths and process
+  # Read paths
   $paths = Get-Content -Path $PathsFile
+
+  # Apply limit if specified
+  if ($Limit -gt 0) {
+    $paths = $paths | Select-Object -First $Limit
+    if ($VerboseOutput) {
+      Write-Host "File copy limit of $Limit reached"
+    }
+  }
+
+  # Process paths
   foreach ($path in $paths) {
     if (Test-Path $path) {
       Copy-Item -Path $path -Destination $Destination -Force
